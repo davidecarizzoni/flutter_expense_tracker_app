@@ -30,6 +30,13 @@ class _ExpensesState extends State<Expenses> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expenses'),
+        backgroundColor: Colors.lightBlue,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.add),
+          )
+        ],
       ),
       body: Column(
         children: [
