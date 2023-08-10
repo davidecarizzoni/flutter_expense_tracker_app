@@ -6,7 +6,7 @@ void main() {
     MaterialApp(
       theme: ThemeData.light(useMaterial3: true),
       darkTheme: ThemeData.dark(),
-      home: const Expenses(),
+      home: Expenses(),
     ),
   );
 }
