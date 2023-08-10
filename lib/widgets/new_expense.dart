@@ -10,27 +10,53 @@ class NewExpense extends StatefulWidget {
 }
 
 class _NewExpenseState extends State<NewExpense> {
-  String _title = '';
-  void _onChangeTitle(String value) {
-    // i don't need to use set state because the UI doesn't need to be updated on every keystroke
-    _title = value;
-  }
+  //important: remove textEditingController on modalClose
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
 
   void _addExpense() {
-    print(_title);
+    print(_titleController.text);
+  }
+
+  void _closeModal() {
+    Navigator.pop(context);
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _amountController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: ListView(
         children: [
+          Row(
+            children: [
+              const Spacer(),
+              IconButton(
+                onPressed: _closeModal,
+                icon: const Icon(Icons.close),
+              ),
+            ],
+          ),
           TextField(
-            onChanged: _onChangeTitle,
             maxLength: 50,
             keyboardType: TextInputType.text,
+            controller: _titleController,
             decoration: const InputDecoration(label: Text('Title')),
+          ),
+          TextField(
+            keyboardType: TextInputType.number,
+            controller: _amountController,
+            decoration: const InputDecoration(
+              label: Text('Amount'),
+              prefix: Text('\$'),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
