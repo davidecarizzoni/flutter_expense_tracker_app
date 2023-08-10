@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+final formatter = DateFormat.yMd();
 
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key});
@@ -13,6 +16,7 @@ class _NewExpenseState extends State<NewExpense> {
   //important: remove textEditingController on modalClose
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  DateTime? _date = null;
 
   void _addExpense() {
     print(_titleController.text);
@@ -20,6 +24,19 @@ class _NewExpenseState extends State<NewExpense> {
 
   void _closeModal() {
     Navigator.pop(context);
+  }
+
+  void _openDatePicker() async {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 1, now.month, now.day);
+    final picketData = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: firstDate,
+        lastDate: now);
+    setState(() {
+      _date = picketData as DateTime;
+    });
   }
 
   @override
@@ -50,13 +67,41 @@ class _NewExpenseState extends State<NewExpense> {
             controller: _titleController,
             decoration: const InputDecoration(label: Text('Title')),
           ),
-          TextField(
-            keyboardType: TextInputType.number,
-            controller: _amountController,
-            decoration: const InputDecoration(
-              label: Text('Amount'),
-              prefix: Text('\$'),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  controller: _amountController,
+                  decoration: const InputDecoration(
+                    label: Text('Amount'),
+                    prefix: Text('\$'),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(_date == null
+                        ? 'No date selected'
+                        : formatter.format(_date as DateTime)),
+                    IconButton(
+                      onPressed: _openDatePicker,
+                      icon: const Icon(
+                        Icons.calendar_month,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 20,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
