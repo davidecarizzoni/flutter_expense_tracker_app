@@ -26,10 +26,16 @@ class _ExpensesState extends State<Expenses> {
         category: CategoryEnum.leisure),
   ];
 
+  void _addExpense(expense) {
+    setState(() {
+      _registeredExpenses.add(expense);
+    });
+  }
+
   void _openAddExpenseModal() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => const NewExpense(),
+      builder: (ctx) => NewExpense(addExpense: _addExpense),
     );
   }
 

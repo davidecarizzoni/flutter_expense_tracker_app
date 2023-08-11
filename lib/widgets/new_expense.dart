@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 final formatter = DateFormat.yMd();
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  NewExpense({super.key, required this.addExpense});
+
+  Function addExpense;
 
   @override
   State<NewExpense> createState() {
@@ -18,10 +20,39 @@ class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   CategoryEnum? _category;
-  DateTime? _date = null;
+  DateTime? _date;
 
   void _addExpense() {
-    print(_titleController.text);
+    final titleIsValid = _titleController.text.trim().isNotEmpty;
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsValid = enteredAmount != null && enteredAmount > 0;
+    final dateIsValid = _date != null;
+    final categoryIsValid = _category != null;
+    if (amountIsValid && dateIsValid && categoryIsValid && titleIsValid) {
+      Expense newExpense = Expense(
+          title: _titleController.text,
+          amount: enteredAmount,
+          date: _date as DateTime,
+          category: _category as CategoryEnum);
+      widget.addExpense(newExpense);
+      _closeModal();
+    } else {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Invalid input'),
+          content: const Text('Please enter valid data'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Ok'),
+            )
+          ],
+        ),
+      );
+    }
   }
 
   void _closeModal() {
