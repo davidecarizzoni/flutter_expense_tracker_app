@@ -18,12 +18,12 @@ class _ExpensesState extends State<Expenses> {
         title: 'Flutter Course',
         amount: 19.99,
         date: DateTime.now(),
-        category: Category.work),
+        category: CategoryEnum.work),
     Expense(
         title: 'Cinema',
         amount: 14.99,
         date: DateTime.now(),
-        category: Category.leisure),
+        category: CategoryEnum.leisure),
   ];
 
   void _openAddExpenseModal() {

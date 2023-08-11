@@ -1,3 +1,4 @@
+import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +17,7 @@ class _NewExpenseState extends State<NewExpense> {
   //important: remove textEditingController on modalClose
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  CategoryEnum? _category;
   DateTime? _date = null;
 
   void _addExpense() {
@@ -98,6 +100,33 @@ class _NewExpenseState extends State<NewExpense> {
                   ],
                 ),
               )
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButton(
+                  value: _category,
+                  items: CategoryEnum.values
+                      .map(
+                        (category) => DropdownMenuItem(
+                          value: category,
+                          child: Text(
+                            category.name.toUpperCase(),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    setState(() {
+                      _category = value;
+                    });
+                  },
+                ),
+              ),
             ],
           ),
           const SizedBox(
