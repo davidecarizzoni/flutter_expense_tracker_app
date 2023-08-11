@@ -13,19 +13,11 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
-  final List<Expense> _registeredExpenses = [
-    Expense(
-        title: 'Flutter Course',
-        amount: 19.99,
-        date: DateTime.now(),
-        category: CategoryEnum.work),
-    Expense(
-        title: 'Cinema',
-        amount: 14.99,
-        date: DateTime.now(),
-        category: CategoryEnum.leisure),
-  ];
-
+  Widget mainContent = const Padding(
+    padding: EdgeInsets.all(10),
+    child: Text('No expenses found. Start adding some!'),
+  );
+  final List<Expense> _registeredExpenses = [];
   void _addExpense(expense) {
     setState(() {
       _registeredExpenses.add(expense);
@@ -33,9 +25,24 @@ class _ExpensesState extends State<Expenses> {
   }
 
   void _removeExpense(Expense expense) {
+    final index = _registeredExpenses.indexOf(expense);
     setState(() {
       _registeredExpenses.remove(expense);
     });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${expense.title} removed'),
+        duration: const Duration(seconds: 2),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              _registeredExpenses.insert(index, expense);
+            });
+          },
+        ),
+      ),
+    );
   }
 
   void _openAddExpenseModal() {
@@ -61,12 +68,14 @@ class _ExpensesState extends State<Expenses> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: ExpensesList(
-              expenses: _registeredExpenses,
-              onRemoveExpense: _removeExpense,
-            ),
-          ),
+          _registeredExpenses.isEmpty
+              ? mainContent
+              : Expanded(
+                  child: ExpensesList(
+                    expenses: _registeredExpenses,
+                    onRemoveExpense: _removeExpense,
+                  ),
+                ),
         ],
       ),
     );
